@@ -28,7 +28,105 @@ func (r *Router) Handle(p string, h http.Handler) {
 // Resolves the ServeHTTP requirement to use for HTTP servers.
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	if r.mux == nil {
-		panic("Router is not intialized, use NewRouter()")
+		panic("Router is not initialized, use NewRouter()")
 	}
 	r.mux.ServeHTTP(w, req)
+}
+
+// Allows you to handle a GET request route
+// Example: r.GET("/healthz", healthzHandler)
+func (r *Router) GET(p string, fn func(w http.ResponseWriter, r *http.Request)) {
+	if r.mux == nil {
+		panic("Router is not initialized, use NewRouter()")
+	}
+	handler := http.HandlerFunc(fn)
+
+	// Adds GET to path
+	fullP := "GET " + p
+
+	r.Handle(fullP, handler)
+}
+
+// Allows you to handle a POST request route
+// Example: r.POST("/note", noteHandler)
+func (r *Router) POST(p string, fn func(w http.ResponseWriter, r *http.Request)) {
+	if r.mux == nil {
+		panic("Router is not initialized, use NewRouter()")
+	}
+
+	handler := http.HandlerFunc(fn)
+
+	// Adds POST to path
+	fullP := "POST " + p
+
+	r.Handle(fullP, handler)
+}
+
+// Allows you to handle a PATCH request route
+// Example: r.PATCH("/note/{id}", noteHandler)
+func (r *Router) PATCH(p string, fn func(w http.ResponseWriter, r *http.Request)) {
+	if r.mux == nil {
+		panic("Router is not initialized, use NewRouter()")
+	}
+
+	handler := http.HandlerFunc(fn)
+
+	fullP := "PATCH " + p
+
+	r.Handle(fullP, handler)
+}
+
+// Allows you to handle a PUT request route
+// Example: r.PUT("/note/{id}", noteHandler)
+
+func (r *Router) PUT(p string, fn func(w http.ResponseWriter, r *http.Request)) {
+	if r.mux == nil {
+		panic("Router is not initialized, use NewRouter()")
+	}
+
+	handler := http.HandlerFunc(fn)
+
+	fullP := "UPDATE " + p
+
+	r.Handle(fullP, handler)
+}
+
+// Allows you to handle a DELETE request route
+// Example: r.DELETE("/note/{id}", noteHandler)
+func (r *Router) DELETE(p string, fn func(w http.ResponseWriter, r *http.Request)) {
+	if r.mux == nil {
+		panic("Router is not initialized, use NewRouter()")
+	}
+
+	handler := http.HandlerFunc(fn)
+
+	fullP := "DELETE " + p
+
+	r.Handle(fullP, handler)
+}
+
+// Allows you to handle a HEAD request route
+func (r *Router) HEAD(p string, fn func(w http.ResponseWriter, r *http.Request)) {
+	if r.mux == nil {
+		panic("Router is not initialized, use NewRouter()")
+	}
+
+	handler := http.HandlerFunc(fn)
+
+	fullP := "HEAD " + p
+
+	r.Handle(fullP, handler)
+}
+
+// Allows you to handle a OPTIONS request route
+func (r *Router) OPTIONS(p string, fn func(w http.ResponseWriter, r *http.Request)) {
+	if r.mux == nil {
+		panic("Router is not initialized, use NewRouter()")
+	}
+
+	handler := http.HandlerFunc(fn)
+
+	fullP := "OPTIONS " + p
+
+	r.Handle(fullP, handler)
 }

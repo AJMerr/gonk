@@ -27,7 +27,7 @@ func healthzHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := router.NewRouter()
 
-	r.Handle("GET /healthz", http.HandlerFunc(healthzHandler))
+	r.GET("/healthz", healthzHandler)
 
 	http.ListenAndServe(":8080", r)
 }
