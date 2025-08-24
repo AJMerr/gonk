@@ -16,3 +16,19 @@ func NewRouter() *Router {
 		mux: mux,
 	}
 }
+
+// Handle allows you to take in a string that contains a METHOD and route, and a handler
+func (r *Router) Handle(p string, h http.Handler) {
+	if r.mux == nil {
+		panic("Router is not initialized, use NewRouter()")
+	}
+	r.mux.Handle(p, h)
+}
+
+// Resolves the ServeHTTP requirement to use for HTTP servers.
+func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	if r.mux == nil {
+		panic("Router is not intialized, use NewRouter()")
+	}
+	r.mux.ServeHTTP(w, req)
+}
