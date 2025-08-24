@@ -5,6 +5,7 @@ MAIN := ./cmd/gonk
 
 
 build:
+	mkdir -p $(dir $(BINARY))
 	$(GO) build -o $(BINARY) -ldflags "-X main.Version=1.0.0" $(MAIN)
 
 test:
@@ -13,8 +14,10 @@ test:
 tidy:
 	$(GO) mod tidy
 
-fmt: 
+fmt:
 	$(GO) fmt $(PKG)
 
-vet: 
+vet:
 	$(GO) vet $(PKG)
+
+.PHONY: build test tidy fmt vet
