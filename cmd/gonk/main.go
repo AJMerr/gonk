@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/AJMerr/gonk/pkg/middleware"
 	"github.com/AJMerr/gonk/pkg/router"
 )
 
@@ -26,6 +27,8 @@ func healthzHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	r := router.NewRouter()
+
+	r.Use(middleware.ReqID)
 
 	r.GET("/healthz", healthzHandler)
 
