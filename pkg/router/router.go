@@ -6,7 +6,8 @@ import (
 
 // Shape of the Router takes in a pointer to http.ServeMux
 type Router struct {
-	mux *http.ServeMux
+	mux         *http.ServeMux
+	middlewares []func(http.Handler) http.Handler
 }
 
 // New Router calls to a NewServeMux for easy method safe routing
@@ -30,7 +31,11 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	if r.mux == nil {
 		panic("Router is not initialized, use NewRouter()")
 	}
-	r.mux.ServeHTTP(w, req)
+	handler := http.Handler(r.mux)
+	for i := len(r.middlewares) - 1; i >= 0; i-- {
+		handler = r.middlewares[i](handler)
+	}
+	handler.ServeHTTP(w, req)
 }
 
 // Allows you to handle a GET request route
@@ -129,4 +134,9 @@ func (r *Router) OPTIONS(p string, fn func(w http.ResponseWriter, r *http.Reques
 	fullP := "OPTIONS " + p
 
 	r.Handle(fullP, handler)
+}
+
+// Ensures Middleware is usable with router
+func (r *Router) Use(mw func(http.Handler) http.Handler) {
+	r.middlewares = append(r.middlewares, mw)
 }
