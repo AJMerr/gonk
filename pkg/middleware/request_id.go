@@ -27,7 +27,7 @@ func newReqID() string {
 }
 
 // Retrieve the Req ID from ctx
-func reqIDFromCtx(ctx context.Context) (string, bool) {
+func ReqIDFromCtx(ctx context.Context) (string, bool) {
 	v := ctx.Value(requestIDKey)
 	s, ok := v.(string)
 	return s, ok
