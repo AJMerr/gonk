@@ -29,6 +29,7 @@ func main() {
 	r := router.NewRouter()
 
 	r.Use(middleware.ReqID)
+	r.Use(middleware.Logger)
 
 	r.GET("/healthz", healthzHandler)
 
