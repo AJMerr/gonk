@@ -26,6 +26,7 @@ func WriteError(w http.ResponseWriter, code int, message string) {
 	WriteJSON(w, code, map[string]any{"error": message})
 }
 
+// Helper variables for commons errors
 var (
 	ErrEmptyBody          = errors.New("request body must not be empty")
 	ErrSyntax             = errors.New("malformed JSON")
@@ -33,6 +34,28 @@ var (
 	ErrTooLarge           = errors.New("request body too large")
 	ErrMultipleJSONValues = errors.New("body must contain only a single JSON object")
 )
+
+// Returns error status from decode
+func StatusFromDecodeError(err error) int {
+	if errors.As(err, new(*http.MaxBytesError)) {
+		return http.StatusRequestEntityTooLarge
+	}
+
+	switch {
+	case errors.Is(err, ErrEmptyBody),
+		errors.Is(err, ErrSyntax),
+		errors.Is(err, ErrUnknownField),
+		errors.Is(err, ErrMultipleJSONValues):
+		return http.StatusBadRequest
+	}
+
+	var ute *json.UnmarshalTypeError
+	if errors.As(err, &ute) {
+		return http.StatusUnprocessableEntity
+	}
+
+	return http.StatusInternalServerError
+}
 
 func DecodeJSON(r *http.Request, dst any) error {
 	if r.Body == nil {
