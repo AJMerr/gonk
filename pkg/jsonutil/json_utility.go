@@ -13,7 +13,7 @@ import (
 func WriteJSON(w http.ResponseWriter, code int, v any) {
 	b, err := json.Marshal(v)
 	if err != nil {
-		http.Error(w, `{"error":"encoding_failed}`, http.StatusInternalServerError)
+		http.Error(w, `{"error":"encoding_failed}"`, http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
